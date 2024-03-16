@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Thoughts on Michael Chow</title>
+    <link>/thoughts/</link>
+    <description>Recent content in Thoughts on Michael Chow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Follow on &lt;a href=&#34;https://twitter.com/chowthedog&#34; target=&#34;_blank&#34;&gt;Twitter&lt;/a&gt; | &lt;a href=&#34;https://github.com/mgjohansen/hucore.git&#34; target=&#34;_blank&#34;&gt;Hucore theme&lt;/a&gt; &amp; &lt;a href=&#34;http://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; ♥</copyright>
+    <lastBuildDate>Tue, 05 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/thoughts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Poet Mouthwash</title>
+      <link>/thoughts/poet-mouthwash/</link>
+      <pubDate>Tue, 05 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/thoughts/poet-mouthwash/</guid>
+      <description>A few years ago, I went to a farewell poetry reading for my friend Maryan. We sat under her favorite tree in West Philly&amp;rsquo;s Clark Park&amp;mdash;the one with glittery bits of mica in its bedskirts&amp;mdash;as people got up to read poems.
+Poems tend to stick around after they’re read&amp;mdash;not necessarily verbatim, but in parts and rhyme and semantic flavor&amp;mdash;so she would reset us with Poet Mouthwash, by reading from Gertrude Stein’s book Tender Buttons.</description>
+    </item>
+    
+    <item>
+      <title>The Dashboard</title>
+      <link>/thoughts/the-dashboard/</link>
+      <pubDate>Sun, 03 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/thoughts/the-dashboard/</guid>
+      <description>Here, all of it! Click the buttons, expand the dropdowns, fill the inputs, multi-select one or two or three onto the graph, with its period in days or weeks or months (your choice), not this tab but the next, the next, or wait no the hamburger.
+Every insight there, the keen with the mundane, interspersed for your pleasure—the needle is yours but first the haystack. It can’t be made a slide deck, a slide deck could never capture the sheer interactive power of dashboard.</description>
+    </item>
+    
+  </channel>
+</rss>

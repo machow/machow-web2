@@ -1,0 +1,179 @@
+/* TOPNAV */
+
+.container.topnav {
+  max-width: 1200px;
+}
+
+.topnav .level-item {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.topnav .topnav__links-pages {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 450px) {
+  .topnav .topnav__links-pages .level-item {
+    /* 
+    padding-left: 10px;
+    padding-right: 10px;
+    */
+    font-size: 16px;
+  }
+
+  .topnav .topnav__links-pages .level-item.topnav__tiny-text {
+    font-size: 14px;
+  }
+}
+
+.topnav .topnav__tiny-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.topnav .nav-left {
+  flex-basis: auto;
+}
+
+
+.topnav .topnav__links {
+  flex-wrap: wrap;
+}
+
+.nav-item .level-item:first-child {
+  margin-left: 0px;
+}
+
+.topnav .topnav__links a.level-item.active {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 10px;
+}
+
+/* Table of contents */
+
+.section-default {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.section-default .container-article--content {
+  max-width: 700px;
+}
+
+.toc-hide {
+  display: none;
+}
+
+.toc-content {
+  position: sticky; 
+  top: 0px;
+  max-width: 230px;
+}
+
+.toc-content a {
+  line-height: 1;
+}
+
+.toc-content li {
+  padding-top: 7.5px;
+}
+
+@media screen and (max-width: 1201px) {
+
+  .section.section-default {
+    display: block;
+  }
+
+  .container-article--toc {
+    display: none;
+  }
+
+  .container-article--left {
+    display: none;
+  }
+
+}
+
+.container-article--toc {
+  flex: 1 1 0;
+
+}
+
+.container-article--left {
+  flex: 1 1 0;
+}
+
+.toc-content .toc-list {
+  list-style-type: none;
+}
+
+/* */
+
+
+@media screen and (max-width: 769px) {
+  .topnav__links-pages {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .topnav__links-social {
+    order: 1;
+  }
+
+  .topnav .nav .level-item {
+
+  }
+}
+
+
+/* TINY */
+
+.tiny__separator {
+  margin-top: 300px;
+  overflow: hidden;
+  text-align: right;
+  color: rgb(105, 112, 122);
+}
+
+.tiny .title {
+  font-size: 16px;
+  text-align: right;
+  margin-right: 10%;
+}
+
+.tiny__separator:before {
+  border-bottom: 1px dotted rgb(105, 112, 122);
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 100%;
+  margin-left: -100%;
+  right: 0.5em;
+}
+
+.tiny .tiny__list-entry {
+  margin-top: 300px;
+}
+
+.tiny .content p {
+  margin-bottom: 0px;
+}
+
+.tiny .container {
+  max-width: 650px;
+
+}
+
+.tiny .content pre, .tiny .content code {
+  background: none; 
+  font-family: "游ゴシック",YuGothic,"ヒラギノ角ゴ Pro","Hiragino Kaku Gothic Pro","メイリオ","Meiryo",sans-serif;
+  font-size: 16px;
+  white-space: pre-wrap;
+  padding: 0px;
+}

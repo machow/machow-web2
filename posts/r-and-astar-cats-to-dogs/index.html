@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="keyword 1, keyword 2, keyword 3" name="keywords">
+<meta content="Michael Chow" name="author">
+<meta property="og:title" content="Using R and the A* Algorithm: Turning Cats into Dogs - Michael Chow">
+<meta property="og:url" content="/posts/r-and-astar-cats-to-dogs/">
+<meta property="og:description" content="Your description here">
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Using R and the A* Algorithm: Turning Cats into Dogs" />
+<meta property="og:description" content="Recently, I&rsquo;ve come across a 3 problems that were solved quickly using the A* algorithm:
+Splitting cantonese sentences into words (e.g. 我好肚餓 -&gt; 我 - 好 - 肚餓). Comparing how similar sounding two english words are. Cruising around minecraft. Since I started on these problems using python, the python-astar package got me up and running quickly. However, when switching to R I wasn&rsquo;t able to find it in any libraries, like igraph." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/r-and-astar-cats-to-dogs/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-01-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-21T00:00:00+00:00" />
+
+<title>Using R and the A* Algorithm: Turning Cats into Dogs | Michael Chow</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/_custom.css">
+<link rel="shortcut icon" href="/wave.ico">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+</head>
+
+<body>
+
+
+
+<section class="section">
+  <div class="container topnav">
+    <nav class="nav topnav__links">
+      <div class="nav-left">
+        <a class="nav-item" href="/">
+          <h1 class="title is-4">Michael Chow</h1>
+          
+        </a>
+      </div>
+      
+        <nav class="nav-item is-mobile topnav__links-pages">
+          
+  
+  
+    
+    
+      
+    
+    <a class="level-item active" href="/posts">longform</a>
+  
+    
+    
+    <a class="level-item" href="/thoughts">short</a>
+  
+    
+    
+    <a class="level-item topnav__tiny-text" href="/tiny">TINY</a>
+  
+    
+    
+    <a class="level-item" href="/projects">projects</a>
+  
+    
+    
+    <a class="level-item" href="/about">about</a>
+  
+
+        </nav>
+        <nav class="nav-item level is-mobile topnav__links-social">
+          
+          <a class="level-item" href="https://github.com/machow" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/chowthedog" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/michael-a-chow/" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+        </nav>
+      
+    </nav>
+  </div>
+</section>
+
+<section class="section section-default">
+  <div class="container-article--left"></div>
+  <div class="container container-article--content">
+    <h1 class="title">Using R and the A* Algorithm: Turning Cats into Dogs</h1>
+    <h2 class="subtitle is-5">January 21, 2019 by Michael Chow</h2>
+    
+    <div class="content content-article">
+      <p>Recently, I&rsquo;ve come across a 3 problems that were solved quickly using the A* algorithm:</p>
+<ol>
+<li>Splitting cantonese sentences into words (e.g. 我好肚餓 -&gt; 我 - 好 - 肚餓).</li>
+<li>Comparing how similar sounding two english words are.</li>
+<li>Cruising around minecraft.</li>
+</ol>
+<p>Since I started on these problems using python, the <a href="https://github.com/jrialland/python-astar"><code>python-astar</code></a> package got me up and running quickly.
+However, when switching to R I wasn&rsquo;t able to find it in any libraries, like igraph.</p>
+<p>I&rsquo;m sure it exists somewhere, but after a couple hours of searching I opted for the next best thing: writing a quick R package (<a href="https://github.com/machow/astar-r">machow/astar-r</a>).</p>
+<h2 id="using-a-in-r">Using A* in R</h2>
+<p>The A* algorithm (pronounced &ldquo;a star&rdquo;) is a search algorithm for finding the &ldquo;shortest&rdquo; path between two nodes in a graph.</p>
+<p>One common use is navigating between two points in space.</p>
+<img src="/003-r-and-astar-2.png" style = "max-width: 300px; display: block; margin-left: auto; margin-right: auto;">
+<p>The image above, taken from <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">wikipedia</a>, shows a search for a path from the bottom left of a grid to the top right, where an obstacle (grey &ldquo;<strong>¬</strong>&rdquo; shape) is in the way.
+Solid colors are nodes on the grid that have been checked, and an optimal path (solid green line) was found to the right of the obstacle.</p>
+<p>In the package, the <code>astar</code> function requires specifying functions that answer four questions for a given node:</p>
+<ol>
+<li>Is this the goal node?</li>
+<li>Who are its neighbors?</li>
+<li>How far is it from a given neighbor?</li>
+<li>(Approximately) how far is it from the goal?</li>
+</ol>
+<p>While navigating in space is a common use case, a lot of other problems can be solved by A* as well!
+In order to demonstrate the A* package, I&rsquo;ll use another interesting case: word ladders.</p>
+<h2 id="word-ladders">Word Ladders</h2>
+<p>Word ladders is a game where you are given a list of words.
+Each word can be considered a node.
+How you play is defined by two pieces: a rule for what makes nodes neighbors and a goal.
+In this post, we&rsquo;ll define those as..</p>
+<ol>
+<li>words that differ by only one letter are neighbors (e.g. &ldquo;cat&rdquo; and &ldquo;bat&rdquo;)</li>
+<li>we want to find the path from one word to another (e.g. &ldquo;cat&rdquo; to &ldquo;dog&rdquo;)</li>
+</ol>
+<p>For example, the graph below shows some possible paths we could try for going from &ldquo;cat&rdquo; to &ldquo;dog&rdquo;. The red path makes it in a few steps, whereas the blue path takes a roundabout way, that meets up with the shorter path.</p>
+<img src="/003-r-and-astar-1.png" style = "max-width: 500px; display: block; margin-left: auto; margin-right: auto;">
+<p>Below, I&rsquo;ll show how the A* algorithm can solve the problem of finding a path that takes the least number of steps.</p>
+<p>First we install the <a href="https://github.com/machow/astar-r"><code>astar</code> package</a>..</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>remotes<span style="color:#f92672">::</span><span style="color:#a6e22e">install_github</span>(<span style="color:#e6db74">&#39;machow/astar-r&#39;</span>)
+</span></span></code></pre></div><p>Next, we define the nodes in our graph, along with tools to see how far they are from eachother..</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(astar)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>words <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">c</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;cat&#39;</span>, <span style="color:#e6db74">&#39;hat&#39;</span>, <span style="color:#e6db74">&#39;bat&#39;</span>, <span style="color:#e6db74">&#39;bet&#39;</span>, <span style="color:#e6db74">&#39;cot&#39;</span>, <span style="color:#e6db74">&#39;cut&#39;</span>, <span style="color:#e6db74">&#39;bed&#39;</span>, <span style="color:#e6db74">&#39;bud&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;bot&#39;</span>, <span style="color:#e6db74">&#39;bit&#39;</span>, <span style="color:#e6db74">&#39;pat&#39;</span>, <span style="color:#e6db74">&#39;sat&#39;</span>, <span style="color:#e6db74">&#39;pit&#39;</span>, <span style="color:#e6db74">&#39;put&#39;</span>, <span style="color:#e6db74">&#39;sit&#39;</span>, <span style="color:#e6db74">&#39;mit&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;bog&#39;</span>, <span style="color:#e6db74">&#39;bug&#39;</span>, <span style="color:#e6db74">&#39;big&#39;</span>, <span style="color:#e6db74">&#39;bag&#39;</span>, <span style="color:#e6db74">&#39;cog&#39;</span>, <span style="color:#e6db74">&#39;pig&#39;</span>, <span style="color:#e6db74">&#39;hog&#39;</span>, <span style="color:#e6db74">&#39;sag&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;dig&#39;</span>, <span style="color:#e6db74">&#39;dug&#39;</span>, <span style="color:#e6db74">&#39;dog&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>split <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(s)               <span style="color:#75715e"># breaks word into vector of letters</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">unlist</span>(<span style="color:#a6e22e">strsplit</span>(s, <span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ltr_dist <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(s1, s2)       <span style="color:#75715e"># number of letters that differ</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">split</span>(s1) <span style="color:#f92672">!=</span> <span style="color:#a6e22e">split</span>(s2))
+</span></span></code></pre></div><p>Then, we define four functions to answer each of the A* questions listed above.  In this case, I set all nodes to be connected as neighbors, but the distance between invalid neighbors as infinite.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># A* methods ----</span>
+</span></span><span style="display:flex;"><span>is_goal_reached <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(src, dst)     <span style="color:#75715e"># should we stop?</span>
+</span></span><span style="display:flex;"><span>  src <span style="color:#f92672">==</span> dst
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>neighbors <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(node)               <span style="color:#75715e"># find neighbors</span>
+</span></span><span style="display:flex;"><span>  words[words <span style="color:#f92672">!=</span> node]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>edge_distance <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(src, dst)       <span style="color:#75715e"># how far is node from neighbor</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">if </span>(<span style="color:#a6e22e">ltr_dist</span>(src, dst) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#ae81ff">1</span> else <span style="color:#66d9ef">Inf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cost_estimate <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(node, goal)     <span style="color:#75715e"># estimate how far node is from goal</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">as.numeric</span>(<span style="color:#a6e22e">ltr_dist</span>(node, goal))        <span style="color:#75715e"># best case estimate: min swaps left</span>
+</span></span></code></pre></div><p>Finally, we run the <code>astar</code> function with the starting and ending nodes..</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Run ----</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">astar</span>(<span style="color:#e6db74">&#39;cat&#39;</span>, <span style="color:#e6db74">&#39;dog&#39;</span>, 
+</span></span><span style="display:flex;"><span>      cost_estimate, edge_distance, neighbors, is_goal_reached
+</span></span><span style="display:flex;"><span>      )
+</span></span></code></pre></div><pre tabindex="0"><code>[[1]]
+[1] &#34;cat&#34;
+
+[[2]]
+[1] &#34;cot&#34;
+
+[[3]]
+[1] &#34;cog&#34;
+
+[[4]]
+[1] &#34;dog&#34;
+</code></pre><p>The output matches the red (shortest) path in the word ladder graph!</p>
+<h2 id="the-world-is-full-of-problems-a-can-solve">The World is Full of Problems A* can Solve</h2>
+<p>While A* is often taught as a spatial pathfinding algorithm, it can solve a surprisingly diverse set of problems. More detailed explanations of the algorithm can be found on <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">wikipedia</a>, or this <a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html">interactive article</a>.</p>
+<p>If you use the <a href="https://github.com/machow/astar-r">R astar package</a> to solve any nifty problems, or encounter any bugs, let me know on Twitter (<a href="https://twitter.com/chowthedog">@chowthedog</a>) or on <a href="https://github.com/machow/astar-r/issues">github</a>!</p>
+
+    </div>
+    
+  </div>
+  <div class="container-article--toc">
+    <div class="toc-content toc-hide"></div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p>Follow on <a href="https://twitter.com/chowthedog" target="_blank">Twitter</a> | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
+  </div>
+</section>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js" integrity="sha256-+bhVTaRmJ/c07eV80nU8gD2cBBF0rYkf1txqXlrbvb0=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/go.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/dockerfile.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-117743385-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+<script>
+tocbot.init({
+  
+  tocSelector: '.toc-content',
+  
+  contentSelector: '.content-article',
+  
+  headingSelector: 'h1, h2, h3',
+  
+  hasInnerContainers: true,
+  collapseDepth: 3,
+  headingsOffset: 30
+});
+</script>
+</body>

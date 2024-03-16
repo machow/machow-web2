@@ -1,20 +1,93 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
-    <loc>http://machow.github.io/categories/</loc>
-    <priority>0</priority>
+    <loc>/</loc>
+    <lastmod>2024-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/thoughts/poet-mouthwash/</loc>
+    <lastmod>2024-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/thoughts/</loc>
+    <lastmod>2024-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/thoughts/the-dashboard/</loc>
+    <lastmod>2023-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/gotcha/</loc>
+    <lastmod>2023-06-18T12:01:01+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/</loc>
+    <lastmod>2023-06-18T12:01:01+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/god-knows-where/</loc>
+    <lastmod>2023-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/boys-club/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/sweet-tart/</loc>
+    <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/felt-good-at-the-time/</loc>
+    <lastmod>2022-06-01T12:01:12+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/hunger-games/</loc>
+    <lastmod>2022-06-01T12:01:11+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/optionality/</loc>
+    <lastmod>2022-06-01T12:01:06+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/out-of-sight/</loc>
+    <lastmod>2022-06-01T12:01:02+00:00</lastmod>
+  </url><url>
+    <loc>/tiny/its-on-the-box/</loc>
+    <lastmod>2022-06-01T12:01:01+00:00</lastmod>
+  </url><url>
+    <loc>/drafts/three-contrasts-in-ed-1-rigor-relevance/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/drafts/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/learning/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/learning/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2020-10-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/pandas-has-a-hard-job/</loc>
+    <lastmod>2020-05-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/</loc>
+    <lastmod>2020-05-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/2020-02-11-dplyr-in-python/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/r-and-astar-with-minecraft/</loc>
+    <lastmod>2019-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/r-and-astar-maze-viz/</loc>
+    <lastmod>2019-02-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/r-and-astar-cats-to-dogs/</loc>
+    <lastmod>2019-01-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/drafts/the-prototype/</loc>
+    <lastmod>2018-05-08T12:00:00-04:00</lastmod>
+  </url><url>
+    <loc>/posts/data-science-cbk/</loc>
+    <lastmod>2018-04-05T11:17:07-04:00</lastmod>
+  </url><url>
+    <loc>/about/</loc>
+  </url><url>
+    <loc>/projects/</loc>
   </url>
-  
-  <url>
-    <loc>http://machow.github.io/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://machow.github.io/tags/</loc>
-    <priority>0</priority>
-  </url>
-  
 </urlset>

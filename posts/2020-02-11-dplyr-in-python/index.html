@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="keyword 1, keyword 2, keyword 3" name="keywords">
+<meta content="Michael Chow" name="author">
+<meta property="og:title" content="What would it take to recreate dplyr in python? - Michael Chow">
+<meta property="og:url" content="/posts/2020-02-11-dplyr-in-python/">
+<meta property="og:description" content="Your description here">
+<meta property="og:type" content="website" />
+<meta property="og:title" content="What would it take to recreate dplyr in python?" />
+<meta property="og:description" content="Three key challenges of pandas groupby: the index tax, the type conversion tax, and composability" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020-02-11-dplyr-in-python/" /><meta property="og:image" content="https://mchow.com/005-transform-profile2.png" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-02-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-02-11T00:00:00+00:00" />
+
+<title>What would it take to recreate dplyr in python? | Michael Chow</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/_custom.css">
+<link rel="shortcut icon" href="/wave.ico">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+</head>
+
+<body>
+
+
+
+<section class="section">
+  <div class="container topnav">
+    <nav class="nav topnav__links">
+      <div class="nav-left">
+        <a class="nav-item" href="/">
+          <h1 class="title is-4">Michael Chow</h1>
+          
+        </a>
+      </div>
+      
+        <nav class="nav-item is-mobile topnav__links-pages">
+          
+  
+  
+    
+    
+      
+    
+    <a class="level-item active" href="/posts">longform</a>
+  
+    
+    
+    <a class="level-item" href="/thoughts">short</a>
+  
+    
+    
+    <a class="level-item topnav__tiny-text" href="/tiny">TINY</a>
+  
+    
+    
+    <a class="level-item" href="/projects">projects</a>
+  
+    
+    
+    <a class="level-item" href="/about">about</a>
+  
+
+        </nav>
+        <nav class="nav-item level is-mobile topnav__links-social">
+          
+          <a class="level-item" href="https://github.com/machow" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/chowthedog" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/michael-a-chow/" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+        </nav>
+      
+    </nav>
+  </div>
+</section>
+
+<section class="section section-default">
+  <div class="container-article--left"></div>
+  <div class="container container-article--content">
+    <h1 class="title">What would it take to recreate dplyr in python?</h1>
+    <h2 class="subtitle is-5">February 11, 2020 by Michael Chow</h2>
+    
+    <div class="content content-article">
+      <p>Recently, I left my job as a data scientist at DataCamp to focus full time on two areas:</p>
+<ul>
+<li>co-directing the non-profit Code for Philly</li>
+<li>bringing the magic of dplyr to python</li>
+</ul>
+<p>In order to do the second part, I&rsquo;ve worked over the past year on a data analysis library called <a href="https://github.com/machow/siuba">siuba</a>.
+As part of this work, I&rsquo;ve found myself often discussing siuba&rsquo;s hardest job: making grouped operations a delight.</p>
+<p>In this post I&rsquo;ll provide a high-level overview of three key challenges for porting <a href="https://github.com/tidyverse/dplyr">dplyr</a> to python. Because the <a href="https://github.com/pandas-dev/pandas">pandas library</a> is the most popular python implementation of both a DataFrame AND performing split-apply-combine on it, I&rsquo;ll focus mostly on the challenges of building dplyr on top of pandas. <strong>Note that all of these challenges arise during the process of split-apply-combine</strong>.</p>
+<p>Here are the three challenges:</p>
+<ol>
+<li><strong>The index tax</strong> - operations that don&rsquo;t use an index pay to make index copies per group.</li>
+<li><strong>The type conversion tax</strong> - Series run slow type checks multiple times per group.</li>
+<li><strong>Grouped operations are not composable</strong> - DataFrame and DataFrameGroupBy methods are focused around performing a single action, like calculating a mean. They become verbose when you need to combine actions, like subtracting the mean of a column from itself.</li>
+</ol>
+<p>The reason these challenges are important can be illustrated in the dplyr code below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(dplyr)
+</span></span><span style="display:flex;"><span>my_arbitrary_func <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(x) x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># group data by cyl</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mtcars <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">select</span>(cyl, hp) <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(cyl) <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(
+</span></span><span style="display:flex;"><span>    dumb_result <span style="color:#f92672">=</span> <span style="color:#a6e22e">my_arbitrary_func</span>(hp),     <span style="color:#75715e"># custom function</span>
+</span></span><span style="display:flex;"><span>    demeaned <span style="color:#f92672">=</span> hp <span style="color:#f92672">-</span> <span style="color:#a6e22e">mean</span>(hp)                 <span style="color:#75715e"># complex expression</span>
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><pre tabindex="0"><code># A tibble: 32 x 4
+# Groups:   cyl [3]
+    cyl    hp dumb_result demeaned
+  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+1     6   110         111    -12.3
+2     6   110         111    -12.3
+3     4    93          94     10.4
+4     6   110         111    -12.3
+5     8   175         176    -34.2
+# … with 27 more rows
+</code></pre><p>dplyr absolutely nails two features for grouped operations, even if the data has many groups:</p>
+<ul>
+<li>Allowing people to use custom functions. Eg. fitting a model</li>
+<li>Allowing people to use complex expressions. Eg. subtracting a mean</li>
+</ul>
+<p>However, similar expressions in grouped pandas either run very slowly (e.g. 30 seconds for only 50k groups), or require cumbersome syntax. In the following sections, I&rsquo;ll break down how the index and type conversion taxes make custom functions slow, examine complex expressions in pandas, and finally highlight experimental work with siuba to bridge the gap.</p>
+<p><strong>Before starting it&rsquo;s worth noting that I feel tremendous appreciation for the pandas library, the many challenging problems it tackles, and the time people contribute to it.</strong></p>
+<h2 id="setting-up-example-data">Setting up example data</h2>
+<p>For this article, I&rsquo;ll use example data for students receiving scores on a number of courses.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> numpy <span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>N_students <span style="color:#f92672">=</span> <span style="color:#ae81ff">50000</span>
+</span></span><span style="display:flex;"><span>N_courses <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>user_courses <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;student_id&#34;</span>: np<span style="color:#f92672">.</span>repeat(range(N_students), N_courses),    <span style="color:#75715e"># e.g. 1,1,1, ... </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;course_id&#34;</span>:  np<span style="color:#f92672">.</span>tile(range(N_courses), N_students),      <span style="color:#75715e"># e.g. 1,2,3, ... </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;score&#34;</span>: random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>, N_courses<span style="color:#f92672">*</span>N_students)
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>g_students <span style="color:#f92672">=</span> user_courses<span style="color:#f92672">.</span>groupby(<span style="color:#e6db74">&#34;student_id&#34;</span>)
+</span></span></code></pre></div><p>This data contains 50,000 students who took 10 courses each. Each student received a score between 0 and 100 for each course.</p>
+<h2 id="barriers-to-customization-the-index-and-type-conversion-taxes">Barriers to customization: the index and type conversion taxes</h2>
+<p>Consider a trivial operation: a function that adds 1 to each students score. This doesn&rsquo;t even require split-apply-combine, but if we did use this approach, we could use a pandas groupby along with two choices&hellip;</p>
+<ul>
+<li>whether to use the <code>.apply</code> or <code>.transform</code> method.</li>
+<li>whether to add 1 to a group&rsquo;s Series, or its underlying array.</li>
+</ul>
+<p>For example, here is the apply method on a Series.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g_students<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> d: d<span style="color:#f92672">.</span>score <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>student_id        
+0           0         100
+            1          10
+            2          33
+            3          45
+            4          69
+                     ... 
+49999       499995     72
+            499996     74
+            499997     54
+            499998     10
+            499999     86
+Name: score, Length: 500000, dtype: int64
+</code></pre><p>Here, we&rsquo;re returning a Series with the score + 1 (right column). Note that the left two columns are a &ldquo;multi-index&rdquo; which is cured using <code>.reset_index</code>&ndash;a story for another time. Note also that the <code>.apply</code> method is more general than <code>.transform</code>, which can only be used on a single column of data.</p>
+<p>Below is a summary of timings on my laptop for each combination of these choices.</p>
+<table>
+<thead>
+<tr>
+<th>operation</th>
+<th>time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apply score + 1</td>
+<td>30s</td>
+</tr>
+<tr>
+<td><strong>apply score.values + 1</strong></td>
+<td><strong>3s</strong></td>
+</tr>
+<tr>
+<td>transform score + 1</td>
+<td>30s</td>
+</tr>
+<tr>
+<td>transform score.values + 1</td>
+<td>20s</td>
+</tr>
+</tbody>
+</table>
+<p>Notice how using apply on an underlying array, rather than a Series, runs in 1/10th of the time as most other methods!</p>
+<p>What could be causing this? At a high-level, there are three factors:</p>
+<ul>
+<li>(split): apply is using a fast method for splitting data</li>
+<li>(split and apply): parts involving Series are very slow</li>
+<li>(combine): the fastest method is actually not performing the combine stage!</li>
+</ul>
+<p>It&rsquo;s worth visiting the last point, before diving more into the first two.</p>
+<h3 id="is-the-fastest-method-cheating-by-not-combining-no">Is the fastest method cheating by not combining? (No)</h3>
+<p>I don&rsquo;t think so, because in practice performing the combine step on it is very fast.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># notice that it isn&#39;t returning 500k rows, but 50k rows. One per student.</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> g_students<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> d: d<span style="color:#f92672">.</span>score<span style="color:#f92672">.</span>values <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>result<span style="color:#f92672">.</span>head()
+</span></span></code></pre></div><pre tabindex="0"><code>student_id
+0       [28, 63, 7, 23, 75, 66, 85, 1, 20, 1]
+1    [85, 50, 54, 65, 61, 88, 33, 48, 43, 67]
+2       [9, 5, 51, 75, 12, 86, 75, 14, 58, 2]
+3      [14, 26, 22, 69, 4, 31, 7, 95, 57, 37]
+4     [55, 94, 94, 90, 39, 9, 64, 39, 22, 52]
+dtype: object
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>flat_arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>concatenate(list(result))
+</span></span><span style="display:flex;"><span>ser_combined <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>Series(flat_arr)
+</span></span><span style="display:flex;"><span>ser_combined
+</span></span></code></pre></div><pre tabindex="0"><code>0         28
+1         63
+2          7
+3         23
+4         75
+          ..
+499995    11
+499996     5
+499997    35
+499998    29
+499999    65
+Length: 500000, dtype: int64
+</code></pre><p>On my computer, this takes only about 25 milliseconds&ndash;an order of magnitude (or two!) beneath the timings above. As will be discussed more below, combining when done once is not the issue.</p>
+<h3 id="breaking-down-the-index-and-type-taxes-for-split-and-apply-steps">Breaking down the index and type taxes for split and apply steps</h3>
+<p>While a deep dive into the internals of these methods is a post for another time, I do want to provide a high-level view of what&rsquo;s going on. A helpful tool in this case is snakeviz, which gives a visual report from profiling code.</p>
+<p>In the graph below, I use the library snakeviz to time <code>g_student.xp.transform(lambda xp: xp + 1)</code>.</p>
+<img src="/005-transform-profile2.png" width="500px">
+<p>Note that most of the time is spent on the apply step. Specifically there are two big blocks.
+The first is the operation (<code>xp + 1</code>), and the second is pandas remaking a new Series from the result of that operation.</p>
+<blockquote>
+<p>⚠️: the seconds reported in the graphs may not add up, but block sizes should be relatively representative. See <a href="https://github.com/jiffyclub/snakeviz/issues/112">this issue</a>.)</p>
+</blockquote>
+<p>Incredibly, if you look more closely at the time spent splitting, most of the time is spent paying the index and type conversion taxes.</p>
+<img src="/005-transform-split-profile.png" width="500px">
+<p>More specifically:</p>
+<ul>
+<li>the index tax: making a shallow copy of every index</li>
+<li>the type conversion tax: inferring the type of the data for each subgroup</li>
+</ul>
+<p>In essence, because these taxes are paid once per group in your data (e.g. 50,000, one for each student), they become very hefty.</p>
+<p>Digging further into the Series operation piece of the apply, <code>xp + 1</code>, we see essentially the same two taxes accumulating for each student group.</p>
+<img src="/005-transform-profile-op.png" width="500px">
+<p>The key here is that every time pandas does <code>xp + 1</code> inside a grouped transform, it is performing it the same as if the data weren&rsquo;t grouped.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ser <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>Series([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> ser <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>Here, it makes sense that pandas might want to do some cumbersome checks&ndash;but it makes the custom groupby nearly unusable. This leads us to a critical question: how does pandas implement fast groupby operations?</p>
+<h2 id="grouped-operations-are-not-composable">Grouped operations are not composable</h2>
+<p>The key to understanding fast pandas groupby methods, is to realize that <strong>they win by not playing the game</strong>.</p>
+<p>This happens in two ways:</p>
+<ul>
+<li>Running type checks only once, and ignoring index when appropriate (which is often).</li>
+<li>Operate on the underlying array values, or avoid creating a Series for each operation.</li>
+</ul>
+<p>This is extremely convenient, but we run into problems when we need to combine these fast methods.
+They cannot be easily combined.</p>
+<p>For instance, consider how simple demeaning a column is in dplyr.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(dplyr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mutate</span>(g_students, demeaned <span style="color:#f92672">=</span> score <span style="color:#f92672">-</span> <span style="color:#a6e22e">mean</span>(score))
+</span></span></code></pre></div><pre tabindex="0"><code># A tibble: 500,000 x 4
+# Groups:   student_id [50,000]
+  student_id course_id score demeaned
+       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1          0         0    27    -8.90
+2          0         1    62    26.1 
+3          0         2     6   -29.9 
+4          0         3    22   -13.9 
+5          0         4    74    38.1 
+# … with 5e+05 more rows
+</code></pre><p>In pandas, doing the same operation like this looks like&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>demeaned <span style="color:#f92672">=</span> user_courses<span style="color:#f92672">.</span>score <span style="color:#f92672">-</span> g_students<span style="color:#f92672">.</span>score<span style="color:#f92672">.</span>transform(<span style="color:#e6db74">&#39;mean&#39;</span>)
+</span></span><span style="display:flex;"><span>user_courses[<span style="color:#e6db74">&#39;demeaned&#39;</span>] <span style="color:#f92672">=</span> demeaned
+</span></span></code></pre></div><p>Two things stick out in the pandas version:</p>
+<ul>
+<li><strong>two objects:</strong> we need to refer to both the grouped AND the ungrouped data</li>
+<li><strong>result length dependent operations:</strong> to calculate a mean in this case we have to pass the string &ldquo;mean&rdquo; to transform. This tells pandas that the result should be the same length as the original data.</li>
+</ul>
+<p>In dplyr users don&rsquo;t need to worry about either of things. <strong>dplyr allows users to decouple the specification of operations, result length, and grouping.</strong></p>
+<h2 id="bridging-the-gap-to-dplyr-with-siuba">Bridging the gap to dplyr with siuba</h2>
+<p>In order to decouple operations, result length, and grouping, siuba does two things:</p>
+<ul>
+<li>wraps Series(GroupBy) methods in a way that makes them composable</li>
+<li>uses its port of dplyr verbs, like <code>mutate</code> to handle result length</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> siuba.experimental.pd_groups <span style="color:#f92672">import</span> fast_mutate
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> siuba <span style="color:#f92672">import</span> _, ungroup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># note: need to ungroup since grouped DataFrames don&#39;t have nice repr</span>
+</span></span><span style="display:flex;"><span>fast_mutate(g_students, result <span style="color:#f92672">=</span> _<span style="color:#f92672">.</span>score <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&gt;&gt;</span> ungroup()
+</span></span></code></pre></div><pre tabindex="0"><code>        student_id  course_id  score  demeaned  result
+0                0          0     27      -8.9      28
+1                0          1     62      26.1      63
+...            ...        ...    ...       ...     ...
+499998       49999          8     28     -15.9      29
+499999       49999          9     64      20.1      65
+
+[500000 rows x 5 columns]
+</code></pre><p>Because it&rsquo;s a light wrapper around the SeriesGroupBy methods, it runs at roughly the same speed.
+I&rsquo;ll write in detail about how it allows users to define their own functions in a future post, but if you&rsquo;re interested you can read more <a href="https://siuba.readthedocs.io/en/latest/developer/pandas-group-ops.html">here in siuba&rsquo;s docs</a>, or in siuba&rsquo;s <a href="https://github.com/machow/siuba/blob/master/examples/architecture/003-fast-mutate.ipynb">groupby architecture decision doc</a>.</p>
+<h2 id="summary">Summary</h2>
+<p>The biggest obstacle to implementing a dplyr-like experience in python is figuring how to add flexibility to grouped pandas operations. This is because custom grouped operations exert a high index tax, and type checking tax. Moreover, grouped operations in pandas are not straightforward to combine.</p>
+<p>This article has taken a critical look at pandas, but I can&rsquo;t emphasize enough how useful the library is overall, and appreciate how much time its contributors have spent working out hard problems.</p>
+<p>I showed in the article how <a href="https://github.com/machow/siuba">siuba</a> resolves some of these issues with group by.
+However, this strategy largely involves wrapping pandas groupoed Series methods.
+<strong>This is because, unlike in R, each splitting and applying a custom operation to a DataFrame or Series is very costly timewise.</strong></p>
+<p>In follow-up articles, I will dive more deeply into strategies for more naturally allowing custom operations, by alleviating the index, and type checking tax, so that DataFrames can be quickly split, applied, and combined.</p>
+<p>If you have questions about siuba, or grouped operations&ndash;feel free reach me on twitter <a href="https://twitter.com/chowthedog">@chowthedog</a>.</p>
+
+    </div>
+    
+  </div>
+  <div class="container-article--toc">
+    <div class="toc-content toc-hide"></div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p>Follow on <a href="https://twitter.com/chowthedog" target="_blank">Twitter</a> | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
+  </div>
+</section>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js" integrity="sha256-+bhVTaRmJ/c07eV80nU8gD2cBBF0rYkf1txqXlrbvb0=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/go.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/dockerfile.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-117743385-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+<script>
+tocbot.init({
+  
+  tocSelector: '.toc-content',
+  
+  contentSelector: '.content-article',
+  
+  headingSelector: 'h1, h2, h3',
+  
+  hasInnerContainers: true,
+  collapseDepth: 3,
+  headingsOffset: 30
+});
+</script>
+</body>

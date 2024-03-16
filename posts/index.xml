@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Michael Chow</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on Michael Chow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Follow on &lt;a href=&#34;https://twitter.com/chowthedog&#34; target=&#34;_blank&#34;&gt;Twitter&lt;/a&gt; | &lt;a href=&#34;https://github.com/mgjohansen/hucore.git&#34; target=&#34;_blank&#34;&gt;Hucore theme&lt;/a&gt; &amp; &lt;a href=&#34;http://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; ♥</copyright>
+    <lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pandas has a hard job (and does it well)</title>
+      <link>/posts/pandas-has-a-hard-job/</link>
+      <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/pandas-has-a-hard-job/</guid>
+      <description>I&amp;rsquo;ve had to dive into pandas&amp;rsquo; code base over the last year for a project (siuba), and my attitude has shifted dramatically from..
+old attitude: why does pandas have to make things so hard? new attitude: pandas has a crazy difficult job. I think this is most apparent in the functions that decide what dtype a Block&amp;mdash;the most basic thing that stores data in pandas&amp;mdash;should be.
+For the ubiquitous Object dtype, it often figures out which of the many possible more specific types to cast it to.</description>
+    </item>
+    
+    <item>
+      <title>What would it take to recreate dplyr in python?</title>
+      <link>/posts/2020-02-11-dplyr-in-python/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020-02-11-dplyr-in-python/</guid>
+      <description>Recently, I left my job as a data scientist at DataCamp to focus full time on two areas:
+co-directing the non-profit Code for Philly bringing the magic of dplyr to python In order to do the second part, I&amp;rsquo;ve worked over the past year on a data analysis library called siuba. As part of this work, I&amp;rsquo;ve found myself often discussing siuba&amp;rsquo;s hardest job: making grouped operations a delight.
+In this post I&amp;rsquo;ll provide a high-level overview of three key challenges for porting dplyr to python.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Cruising Around Minecraft</title>
+      <link>/posts/r-and-astar-with-minecraft/</link>
+      <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-with-minecraft/</guid>
+      <description>(This article is the last in a series on using the A* algorithm in R. See the first and second posts for more.)
+Last year at the NYC R conference, I had the chance to see David Smith demonstrate building and navigating a Minecraft maze, using the miner package. It was really cool! At the end of the talk, as we stepped out of the maze, my gaze turned to the lofty minecraft peaks in the distance.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Animated Pathfinding with gganimate</title>
+      <link>/posts/r-and-astar-maze-viz/</link>
+      <pubDate>Wed, 27 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-maze-viz/</guid>
+      <description>This post is the second part of a series on using the A* algorithm in R.
+While my previous post introduced the machow/astar-r library, and how it works, in this one I&amp;rsquo;ll focus on visualizing it finding a solution with gganimate. Below is an outline of what I&amp;rsquo;ll cover.
+manually define a maze and plot it with ggplot use an example class from the astar library to navigate it add a bonus picture of a gnome to the maze use a single line of gganimate to animate the A* search Drawing the maze First, we&amp;rsquo;ll load in the necessary libraries, and create a simple maze to navigate.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Turning Cats into Dogs</title>
+      <link>/posts/r-and-astar-cats-to-dogs/</link>
+      <pubDate>Mon, 21 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-cats-to-dogs/</guid>
+      <description>Recently, I&amp;rsquo;ve come across a 3 problems that were solved quickly using the A* algorithm:
+Splitting cantonese sentences into words (e.g. 我好肚餓 -&amp;gt; 我 - 好 - 肚餓). Comparing how similar sounding two english words are. Cruising around minecraft. Since I started on these problems using python, the python-astar package got me up and running quickly. However, when switching to R I wasn&amp;rsquo;t able to find it in any libraries, like igraph.</description>
+    </item>
+    
+    <item>
+      <title>Teaching Data Science to High Schoolers</title>
+      <link>/posts/data-science-cbk/</link>
+      <pubDate>Thu, 05 Apr 2018 11:17:07 -0400</pubDate>
+      
+      <guid>/posts/data-science-cbk/</guid>
+      <description>Over the past year I&amp;rsquo;ve worked on the tools to execute and grade code behind the scenes at DataCamp. This work has ranged from expanding our open source tools for grading R and Python code, to running SQL and bash exercises. However, while helping scale up education data science education to thousands of students is something I&amp;rsquo;ve wanted to do since helping teach statistics in grad school, there&amp;rsquo;s is a certain sanity in being in a room with handful of students.</description>
+    </item>
+    
+  </channel>
+</rss>

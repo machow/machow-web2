@@ -1,15 +1,217 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Michael Chow</title>
-    <link>http://machow.github.io/</link>
+    <link>/</link>
     <description>Recent content on Michael Chow</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2017 | Follow on &lt;a href=&#34;https://twitter.com/mgjohansen&#34; target=&#34;_blank&#34;&gt;Twitter&lt;/a&gt; | &lt;a href=&#34;https://github.com/mgjohansen/hucore.git&#34; target=&#34;_blank&#34;&gt;Hucore theme&lt;/a&gt; &amp; &lt;a href=&#34;http://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; ♥</copyright>
+    <copyright>Follow on &lt;a href=&#34;https://twitter.com/chowthedog&#34; target=&#34;_blank&#34;&gt;Twitter&lt;/a&gt; | &lt;a href=&#34;https://github.com/mgjohansen/hucore.git&#34; target=&#34;_blank&#34;&gt;Hucore theme&lt;/a&gt; &amp; &lt;a href=&#34;http://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; ♥</copyright>
+    <lastBuildDate>Tue, 05 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Poet Mouthwash</title>
+      <link>/thoughts/poet-mouthwash/</link>
+      <pubDate>Tue, 05 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/thoughts/poet-mouthwash/</guid>
+      <description>A few years ago, I went to a farewell poetry reading for my friend Maryan. We sat under her favorite tree in West Philly&amp;rsquo;s Clark Park&amp;mdash;the one with glittery bits of mica in its bedskirts&amp;mdash;as people got up to read poems.
+Poems tend to stick around after they’re read&amp;mdash;not necessarily verbatim, but in parts and rhyme and semantic flavor&amp;mdash;so she would reset us with Poet Mouthwash, by reading from Gertrude Stein’s book Tender Buttons.</description>
+    </item>
     
-	<atom:link href="http://machow.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Dashboard</title>
+      <link>/thoughts/the-dashboard/</link>
+      <pubDate>Sun, 03 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/thoughts/the-dashboard/</guid>
+      <description>Here, all of it! Click the buttons, expand the dropdowns, fill the inputs, multi-select one or two or three onto the graph, with its period in days or weeks or months (your choice), not this tab but the next, the next, or wait no the hamburger.
+Every insight there, the keen with the mundane, interspersed for your pleasure—the needle is yours but first the haystack. It can’t be made a slide deck, a slide deck could never capture the sheer interactive power of dashboard.</description>
+    </item>
     
+    <item>
+      <title>GOTCHA</title>
+      <link>/tiny/gotcha/</link>
+      <pubDate>Sun, 18 Jun 2023 12:01:01 +0000</pubDate>
+      
+      <guid>/tiny/gotcha/</guid>
+      <description>As you get halfway through a book called quit you begin to notice some turns into strange diversions until we feel like you are reading an entirely different altogether less compelling book </description>
+    </item>
+    
+    <item>
+      <title>GOD KNOWS WHERE</title>
+      <link>/tiny/god-knows-where/</link>
+      <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/tiny/god-knows-where/</guid>
+      <description>this is not a format I made up but borrowed from joy williams&amp;#39; 99 stories of god who borrowed from </description>
+    </item>
+    
+    <item>
+      <title>BOYS CLUB</title>
+      <link>/tiny/boys-club/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/tiny/boys-club/</guid>
+      <description>Smokey bear has a friend named woodsy owl And it says something that all our wilderness advice comes from cartoon man creatures who sport great denim. </description>
+    </item>
+    
+    <item>
+      <title>TAKE TWO AND CALL ME IN THE MORNING</title>
+      <link>/tiny/sweet-tart/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/tiny/sweet-tart/</guid>
+      <description>If a doctor prescribed 200mg of nerds it would be a sweet tart. </description>
+    </item>
+    
+    <item>
+      <title>FELT GOOD AT THE TIME MIGHT DELETE LATER</title>
+      <link>/tiny/felt-good-at-the-time/</link>
+      <pubDate>Wed, 01 Jun 2022 12:01:12 +0000</pubDate>
+      
+      <guid>/tiny/felt-good-at-the-time/</guid>
+      <description>You were so busy deploying apps that we forgot about the greatest app of all this app they call life </description>
+    </item>
+    
+    <item>
+      <title>HUNGER GAMES</title>
+      <link>/tiny/hunger-games/</link>
+      <pubDate>Wed, 01 Jun 2022 12:01:11 +0000</pubDate>
+      
+      <guid>/tiny/hunger-games/</guid>
+      <description>You scatter seed but do not weed for we hate it and season to season the strongest the ones that rise against all odds live on although they can- not make a stew of the victor </description>
+    </item>
+    
+    <item>
+      <title>OPTIONALITY</title>
+      <link>/tiny/optionality/</link>
+      <pubDate>Wed, 01 Jun 2022 12:01:06 +0000</pubDate>
+      
+      <guid>/tiny/optionality/</guid>
+      <description>My boss carries three pens, one black one blue one red. Everyday we write her novel in black pen. It&amp;#39;s arduous. He sweats as they write, and every day discusses a hurdle, the old ones: a block, a junction with two roads no one wants to commit to. The new ones: a loveless marriage, plumbing issues. After 700 pages of black pen you finish. </description>
+    </item>
+    
+    <item>
+      <title>OUT OF SIGHT</title>
+      <link>/tiny/out-of-sight/</link>
+      <pubDate>Wed, 01 Jun 2022 12:01:02 +0000</pubDate>
+      
+      <guid>/tiny/out-of-sight/</guid>
+      <description>A Blind Dog crossing an invisible border into the neighbor&amp;#39;s yard </description>
+    </item>
+    
+    <item>
+      <title>IT&#39;S ON THE BOX</title>
+      <link>/tiny/its-on-the-box/</link>
+      <pubDate>Wed, 01 Jun 2022 12:01:01 +0000</pubDate>
+      
+      <guid>/tiny/its-on-the-box/</guid>
+      <description>I started cooking us fishsticks but forgot to record the time but also time is a fiction so technically the fishsticks are done and will never be ready. </description>
+    </item>
+    
+    <item>
+      <title>(DRAFT) Three Contrasting Views in Education Research</title>
+      <link>/drafts/three-contrasts-in-ed-1-rigor-relevance/</link>
+      <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/drafts/three-contrasts-in-ed-1-rigor-relevance/</guid>
+      <description>Over the past several years, while designing skill assessment tools, I&amp;rsquo;ve stewed on something that might seem obvious: educational and cognitive psychology are distinct fields. Researchers in these fields often go to different conferences, cite different people in their papers, and sometimes use the same concept in ways foreign to the other field.
+This may boil down to differences in approach:
+Cognitive psychologists often use laboratory studies with simple materials (e.</description>
+    </item>
+    
+    <item>
+      <title>Pandas has a hard job (and does it well)</title>
+      <link>/posts/pandas-has-a-hard-job/</link>
+      <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/pandas-has-a-hard-job/</guid>
+      <description>I&amp;rsquo;ve had to dive into pandas&amp;rsquo; code base over the last year for a project (siuba), and my attitude has shifted dramatically from..
+old attitude: why does pandas have to make things so hard? new attitude: pandas has a crazy difficult job. I think this is most apparent in the functions that decide what dtype a Block&amp;mdash;the most basic thing that stores data in pandas&amp;mdash;should be.
+For the ubiquitous Object dtype, it often figures out which of the many possible more specific types to cast it to.</description>
+    </item>
+    
+    <item>
+      <title>What would it take to recreate dplyr in python?</title>
+      <link>/posts/2020-02-11-dplyr-in-python/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020-02-11-dplyr-in-python/</guid>
+      <description>Recently, I left my job as a data scientist at DataCamp to focus full time on two areas:
+co-directing the non-profit Code for Philly bringing the magic of dplyr to python In order to do the second part, I&amp;rsquo;ve worked over the past year on a data analysis library called siuba. As part of this work, I&amp;rsquo;ve found myself often discussing siuba&amp;rsquo;s hardest job: making grouped operations a delight.
+In this post I&amp;rsquo;ll provide a high-level overview of three key challenges for porting dplyr to python.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Cruising Around Minecraft</title>
+      <link>/posts/r-and-astar-with-minecraft/</link>
+      <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-with-minecraft/</guid>
+      <description>(This article is the last in a series on using the A* algorithm in R. See the first and second posts for more.)
+Last year at the NYC R conference, I had the chance to see David Smith demonstrate building and navigating a Minecraft maze, using the miner package. It was really cool! At the end of the talk, as we stepped out of the maze, my gaze turned to the lofty minecraft peaks in the distance.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Animated Pathfinding with gganimate</title>
+      <link>/posts/r-and-astar-maze-viz/</link>
+      <pubDate>Wed, 27 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-maze-viz/</guid>
+      <description>This post is the second part of a series on using the A* algorithm in R.
+While my previous post introduced the machow/astar-r library, and how it works, in this one I&amp;rsquo;ll focus on visualizing it finding a solution with gganimate. Below is an outline of what I&amp;rsquo;ll cover.
+manually define a maze and plot it with ggplot use an example class from the astar library to navigate it add a bonus picture of a gnome to the maze use a single line of gganimate to animate the A* search Drawing the maze First, we&amp;rsquo;ll load in the necessary libraries, and create a simple maze to navigate.</description>
+    </item>
+    
+    <item>
+      <title>Using R and the A* Algorithm: Turning Cats into Dogs</title>
+      <link>/posts/r-and-astar-cats-to-dogs/</link>
+      <pubDate>Mon, 21 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r-and-astar-cats-to-dogs/</guid>
+      <description>Recently, I&amp;rsquo;ve come across a 3 problems that were solved quickly using the A* algorithm:
+Splitting cantonese sentences into words (e.g. 我好肚餓 -&amp;gt; 我 - 好 - 肚餓). Comparing how similar sounding two english words are. Cruising around minecraft. Since I started on these problems using python, the python-astar package got me up and running quickly. However, when switching to R I wasn&amp;rsquo;t able to find it in any libraries, like igraph.</description>
+    </item>
+    
+    <item>
+      <title>The Prototype that Lived Forever</title>
+      <link>/drafts/the-prototype/</link>
+      <pubDate>Tue, 08 May 2018 12:00:00 -0400</pubDate>
+      
+      <guid>/drafts/the-prototype/</guid>
+      <description>This is the story of a simple webapp that came into the world to answer a simple question. It was the result of a three day bender, that ended in a frenzied last minute deployment onto Heroku. The question it answered was this:
+what do student submissions at DataCamp look like?
+At the time, I was working on different ways of representing code, and wanted to see how a common way of breaking down code, Abstract Syntax Trees, would work for pulling insights for different python courses.</description>
+    </item>
+    
+    <item>
+      <title>Teaching Data Science to High Schoolers</title>
+      <link>/posts/data-science-cbk/</link>
+      <pubDate>Thu, 05 Apr 2018 11:17:07 -0400</pubDate>
+      
+      <guid>/posts/data-science-cbk/</guid>
+      <description>Over the past year I&amp;rsquo;ve worked on the tools to execute and grade code behind the scenes at DataCamp. This work has ranged from expanding our open source tools for grading R and Python code, to running SQL and bash exercises. However, while helping scale up education data science education to thousands of students is something I&amp;rsquo;ve wanted to do since helping teach statistics in grad school, there&amp;rsquo;s is a certain sanity in being in a room with handful of students.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>I&amp;rsquo;m a data science tool builder at Posit, where I work on open source tools for data analysis (like siuba).
+Previously, I worked as a consultant building out a data team for Caltrans (and love all things GTFS).
+I received a Ph.D. in Cognitive Psychology from Princeton University, and am interested in what drives expert data science performance. This led me to build DataCamp Signal, adapative tests of data science skill.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/</guid>
+      <description>Work Year Description 2023 great_tables - table styling taken to an unhealthy extreme (WIP; w/ Rich Ionnane). quartodoc - generate python API documentation in quarto. 2022 Wrote siuba.org guide. Wrote py-shiny guide. pins for python - save and share data using any cloud bucket. 2021 Consultant. Built out data team for warehousing all of California&amp;rsquo;s transit data (calitp.org, talk by Hunter Owens at rstudio::conf()). 2020 Spent the year working on siuba (rstudio::conf() talk).</description>
+    </item>
     
   </channel>
 </rss>

@@ -1,0 +1,102 @@
+---
+title: Comparing pandas Series and R vectors
+author: Michael Chow
+date: '2020-05-02'
+slug: comparing-pandas-series-and-r-vectors
+categories: []
+tags: []
+draft: yes
+---
+
+```{python}
+from siuba.siu import Symbolic, Call, _, strip_symbolic
+```
+
+```{python}
+import pandas as pd
+from siuba.siu import Symbolic, Call, strip_symbolic, _
+from siuba.dply.verbs import simple_varname
+
+def tribble(*args):
+    colnames = []
+    for ii, arg in enumerate(args):
+        if isinstance(arg, (Symbolic, Call)):
+            name = simple_varname(strip_symbolic(arg))
+            
+            if name is None:
+                break
+            
+            colnames.append(name)
+
+    n_cols = len(colnames)
+    body = []
+    row = []
+    for jj, arg in enumerate(args[n_cols:]):
+        if isinstance(arg, (Symbolic, Call)):
+            raise TypeError("Received arg type %s, but already defined header"% type(arg))
+        
+        row.append(arg)
+        
+        if (jj + 1) % n_cols == 0:
+            body.append(row)
+            row = []
+    
+    return pd.DataFrame(body, columns = colnames)
+
+tribble(_.a, _.b, _.c, 1, 2, 3)
+```
+
+```{python}
+
+import rpy2.robjects
+# %load_ext rpy2.ipython
+```
+
+```{r}
+ser = setNames(4:6, 0:2)
+ser
+```
+
+```{python}
+ser = pd.Series([4, 5, 6])
+ser
+```
+
+```{python}
+df = tribble(
+    _["pd.Series"],      _["R"],              _["dict"], _["list"], _["operation"], _["like"],
+    "1 in ser",       "1 %in% names(ser)", "1 in d", "",  "keys contain", "dict",
+    "1 in ser.array", "1 %in% ser",       "1 in d.items()", "1 in seq", "values contain", "list",
+    "ser[1]",         'ser["1"]',       "d[1]",  "" , "get value by key", "dict",
+    "ser.iloc[1]",    "ser[1+1]",       "",  "seq[1]", "get value by position", "list",
+    "list(ser)",  "c(ser)",  "list(d.values())", "list(seq)", "loop over values", "list",
+    "list(ser.index)", "c(names(ser))", "list(d)", "", "loop over keys", "dict",
+)
+
+```
+
+```{python}
+from siuba import _, mutate, select, arrange, pipe
+
+df_sorted = (
+    df
+    >> mutate(
+        res_pandas=_["pd.Series"].apply(lambda x: eval(x, {"ser": ser})),
+        res_R=_.R.apply(lambda x: rpy2.robjects.r(x)),
+    )
+    >> select(_["pd.Series"], _["dict"], _["list"], _["R"], _.contains(""))
+    >> arrange(_["like"])
+    >> pipe(_.reset_index(drop = True))
+)
+```
+
+```{python}
+styles = [
+    dict(selector = ".row2.col0, .row2.col1, .row5.col0, .row5.col2", props = [("background-color", "yellow")])
+]
+select(df_sorted, -_["R"]).style.set_table_styles(styles)
+```
+
+```{python}
+select(df_sorted, -_["dict", "list", "like"])
+```

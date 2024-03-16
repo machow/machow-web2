@@ -1,15 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.37.1" />
+	<meta name="generator" content="Hugo 0.110.0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="keyword 1, keyword 2, keyword 3" name="keywords">
 <meta content="Michael Chow" name="author">
 <meta property="og:title" content="Michael Chow">
-<meta property="og:url" content="http://machow.github.io/">
+<meta property="og:url" content="/">
 <meta property="og:description" content="Your description here">
 <meta property="og:type" content="website" />
+<meta property="og:title" content="Michael Chow" />
+<meta property="og:description" content="Your description here" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/" />
+
 <title>Michael Chow</title>
 
 <script type="text/x-mathjax-config">
@@ -20,22 +26,59 @@
     }
   });
 </script>
-<link rel="stylesheet" href="http://machow.github.io//css/style.css">
-<link rel="shortcut icon" href="http://machow.github.io//wave.ico">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/_custom.css">
+<link rel="shortcut icon" href="/wave.ico">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
 </head>
 
+
+
+
 <section class="section">
-  <div class="container">
-    <nav class="nav">
+  <div class="container topnav">
+    <nav class="nav topnav__links">
       <div class="nav-left">
-        <a class="nav-item" href="http://machow.github.io/"><h1 class="title is-4">Michael Chow</h1></a>
+        <a class="nav-item" href="/">
+          <h1 class="title is-4">Michael Chow</h1>
+          
+        </a>
       </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile">
+      
+        <nav class="nav-item is-mobile topnav__links-pages">
+          
+  
+  
+    
+    
+      
+    
+    <a class="level-item active" href="/posts">longform</a>
+  
+    
+    
+    <a class="level-item" href="/thoughts">short</a>
+  
+    
+    
+    <a class="level-item topnav__tiny-text" href="/tiny">TINY</a>
+  
+    
+    
+    <a class="level-item" href="/projects">projects</a>
+  
+    
+    
+    <a class="level-item" href="/about">about</a>
+  
+
+        </nav>
+        <nav class="nav-item level is-mobile topnav__links-social">
           
           <a class="level-item" href="https://github.com/machow" target="_blank">
             <span class="icon">
@@ -56,13 +99,123 @@
           </a>
           
         </nav>
-      </div>
+      
     </nav>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
+    
+    <article>
+      <h1 class="title"><a href="/posts/pandas-has-a-hard-job/">Pandas has a hard job (and does it well)</a></h1>
+      <h2 class="subtitle is-5">May 26, 2020</h2>
+      
+      <div class="content">
+        I&rsquo;ve had to dive into pandas&rsquo; code base over the last year for a project (siuba), and my attitude has shifted dramatically from..
+old attitude: why does pandas have to make things so hard? new attitude: pandas has a crazy difficult job. I think this is most apparent in the functions that decide what dtype a Block&mdash;the most basic thing that stores data in pandas&mdash;should be.
+For the ubiquitous Object dtype, it often figures out which of the many possible more specific types to cast it to.
+        
+        ...<a class="button is-link" href="/posts/pandas-has-a-hard-job/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="/posts/2020-02-11-dplyr-in-python/">What would it take to recreate dplyr in python?</a></h1>
+      <h2 class="subtitle is-5">February 11, 2020</h2>
+      
+      <div class="content">
+        Recently, I left my job as a data scientist at DataCamp to focus full time on two areas:
+co-directing the non-profit Code for Philly bringing the magic of dplyr to python In order to do the second part, I&rsquo;ve worked over the past year on a data analysis library called siuba. As part of this work, I&rsquo;ve found myself often discussing siuba&rsquo;s hardest job: making grouped operations a delight.
+In this post I&rsquo;ll provide a high-level overview of three key challenges for porting dplyr to python.
+        
+        ...<a class="button is-link" href="/posts/2020-02-11-dplyr-in-python/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="/posts/r-and-astar-with-minecraft/">Using R and the A* Algorithm: Cruising Around Minecraft</a></h1>
+      <h2 class="subtitle is-5">March 18, 2019</h2>
+      
+      <div class="content">
+        (This article is the last in a series on using the A* algorithm in R. See the first and second posts for more.)
+Last year at the NYC R conference, I had the chance to see David Smith demonstrate building and navigating a Minecraft maze, using the miner package. It was really cool! At the end of the talk, as we stepped out of the maze, my gaze turned to the lofty minecraft peaks in the distance.
+        
+        ...<a class="button is-link" href="/posts/r-and-astar-with-minecraft/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="/posts/r-and-astar-maze-viz/">Using R and the A* Algorithm: Animated Pathfinding with gganimate</a></h1>
+      <h2 class="subtitle is-5">February 27, 2019</h2>
+      
+      <div class="content">
+        This post is the second part of a series on using the A* algorithm in R.
+While my previous post introduced the machow/astar-r library, and how it works, in this one I&rsquo;ll focus on visualizing it finding a solution with gganimate. Below is an outline of what I&rsquo;ll cover.
+manually define a maze and plot it with ggplot use an example class from the astar library to navigate it add a bonus picture of a gnome to the maze use a single line of gganimate to animate the A* search Drawing the maze First, we&rsquo;ll load in the necessary libraries, and create a simple maze to navigate.
+        
+        ...<a class="button is-link" href="/posts/r-and-astar-maze-viz/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="/posts/r-and-astar-cats-to-dogs/">Using R and the A* Algorithm: Turning Cats into Dogs</a></h1>
+      <h2 class="subtitle is-5">January 21, 2019</h2>
+      
+      <div class="content">
+        Recently, I&rsquo;ve come across a 3 problems that were solved quickly using the A* algorithm:
+Splitting cantonese sentences into words (e.g. 我好肚餓 -&gt; 我 - 好 - 肚餓). Comparing how similar sounding two english words are. Cruising around minecraft. Since I started on these problems using python, the python-astar package got me up and running quickly. However, when switching to R I wasn&rsquo;t able to find it in any libraries, like igraph.
+        
+        ...<a class="button is-link" href="/posts/r-and-astar-cats-to-dogs/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="/posts/data-science-cbk/">Teaching Data Science to High Schoolers</a></h1>
+      <h2 class="subtitle is-5">April 5, 2018</h2>
+      
+      <div class="content">
+        Over the past year I&rsquo;ve worked on the tools to execute and grade code behind the scenes at DataCamp. This work has ranged from expanding our open source tools for grading R and Python code, to running SQL and bash exercises. However, while helping scale up education data science education to thousands of students is something I&rsquo;ve wanted to do since helping teach statistics in grad school, there&rsquo;s is a certain sanity in being in a room with handful of students.
+        
+        ...<a class="button is-link" href="/posts/data-science-cbk/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
     
   </div>
 </section>
@@ -85,7 +238,7 @@
 
 <section class="section">
   <div class="container has-text-centered">
-    <p>&copy; 2017 | Follow on <a href="https://twitter.com/mgjohansen" target="_blank">Twitter</a> | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
+    <p>Follow on <a href="https://twitter.com/chowthedog" target="_blank">Twitter</a> | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
   </div>
 </section>
 
@@ -101,4 +254,32 @@
 <script>hljs.initHighlightingOnLoad();</script>
 
 
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-117743385-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+<script>
+tocbot.init({
+  
+  tocSelector: '.toc-content',
+  
+  contentSelector: '.content-article',
+  
+  headingSelector: 'h1, h2, h3',
+  
+  hasInnerContainers: true,
+  collapseDepth: 3,
+  headingsOffset: 30
+});
+</script>

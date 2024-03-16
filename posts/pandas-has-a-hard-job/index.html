@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="keyword 1, keyword 2, keyword 3" name="keywords">
+<meta content="Michael Chow" name="author">
+<meta property="og:title" content="Pandas has a hard job (and does it well) - Michael Chow">
+<meta property="og:url" content="/posts/pandas-has-a-hard-job/">
+<meta property="og:description" content="Your description here">
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Pandas has a hard job (and does it well)" />
+<meta property="og:description" content="I&rsquo;ve had to dive into pandas&rsquo; code base over the last year for a project (siuba), and my attitude has shifted dramatically from..
+old attitude: why does pandas have to make things so hard? new attitude: pandas has a crazy difficult job. I think this is most apparent in the functions that decide what dtype a Block&mdash;the most basic thing that stores data in pandas&mdash;should be.
+For the ubiquitous Object dtype, it often figures out which of the many possible more specific types to cast it to." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/pandas-has-a-hard-job/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-26T00:00:00+00:00" />
+
+<title>Pandas has a hard job (and does it well) | Michael Chow</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/_custom.css">
+<link rel="shortcut icon" href="/wave.ico">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+</head>
+
+<body>
+
+
+
+<section class="section">
+  <div class="container topnav">
+    <nav class="nav topnav__links">
+      <div class="nav-left">
+        <a class="nav-item" href="/">
+          <h1 class="title is-4">Michael Chow</h1>
+          
+        </a>
+      </div>
+      
+        <nav class="nav-item is-mobile topnav__links-pages">
+          
+  
+  
+    
+    
+      
+    
+    <a class="level-item active" href="/posts">longform</a>
+  
+    
+    
+    <a class="level-item" href="/thoughts">short</a>
+  
+    
+    
+    <a class="level-item topnav__tiny-text" href="/tiny">TINY</a>
+  
+    
+    
+    <a class="level-item" href="/projects">projects</a>
+  
+    
+    
+    <a class="level-item" href="/about">about</a>
+  
+
+        </nav>
+        <nav class="nav-item level is-mobile topnav__links-social">
+          
+          <a class="level-item" href="https://github.com/machow" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/chowthedog" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/michael-a-chow/" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+        </nav>
+      
+    </nav>
+  </div>
+</section>
+
+<section class="section section-default">
+  <div class="container-article--left"></div>
+  <div class="container container-article--content">
+    <h1 class="title">Pandas has a hard job (and does it well)</h1>
+    <h2 class="subtitle is-5">May 26, 2020 by Michael Chow</h2>
+    
+    <div class="content content-article">
+      <p>I&rsquo;ve had to dive into pandas&rsquo; code base over the last year for <a href="https://github.com/machow/siuba">a project (siuba)</a>, and my attitude has shifted dramatically from..</p>
+<ul>
+<li><strong>old attitude:</strong> why does pandas have to make things so hard?</li>
+<li><strong>new attitude:</strong> pandas has a crazy difficult job.</li>
+</ul>
+<p>I think this is most apparent <a href="https://github.com/pandas-dev/pandas/blob/238e04fce87b30923eeb4a0a0606dd492b0e52f0/pandas/core/internals/blocks.py#L2662">in the functions</a> that decide what dtype a Block&mdash;the most basic thing that stores data in pandas&mdash;should be.</p>
+<p>For the ubiquitous Object dtype, it often figures out which of the many possible more specific types to cast it to.</p>
+<p><strong>Ask yourself what this outputs:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>nan, <span style="color:#e6db74">&#34;a&#34;</span>])
+</span></span></code></pre></div><p>Lo and behold&mdash;it produces an array where the np.nan has been converted to the string &ldquo;nan&rdquo;.</p>
+<pre tabindex="0"><code>array([&#39;nan&#39;, &#39;a&#39;], dtype=&#39;&lt;U32&#39;)
+</code></pre><p>And yet,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pd<span style="color:#f92672">.</span>Series([np<span style="color:#f92672">.</span>nan, <span style="color:#e6db74">&#34;a&#34;</span>])
+</span></span></code></pre></div><pre tabindex="0"><code>0    NaN
+1      a
+dtype: object
+</code></pre><p>Knows this, has your back, and does not stringify it!</p>
+<h2 id="pandas-has-your-back">pandas has your back</h2>
+<p>pandas also has a pathological fixation on when it tries to convert dtypes, since avoiding all the bad conversion outcomes is a relatively time intensive process (compared to e.g. creating a numpy array).</p>
+<p>I realize things could be much easier in pandas user facing interface, but really appreciate the sheer amount of effort that has gone into its dtype wrangling.</p>
+<h2 id="it-is-a-building-block-for-incredible-tools">It is a building block for incredible tools</h2>
+<p>Here are three libraries built in large part on pandas.</p>
+<ul>
+<li><a href="https://github.com/ibis-project/ibis">ibis</a> - similar to R library <a href="https://github.com/tidyverse/dplyr">dplyr</a>. Performs analyses on top of pandas DataFrames or SQL databases. Some of the maintainers are also pandas devs.</li>
+<li><a href="https://github.com/geopandas/geopandas">geopandas</a> - working with geographic data.</li>
+<li><a href="https://github.com/dask/dask">dask</a> - parallel computing and task scheduling over DataFrames</li>
+</ul>
+<p>It&rsquo;s worth noting that if you are a user coming from dplyr, the ibis library is probably a closer fit to what you&rsquo;re looking for.</p>
+<h2 id="it-has-made-porting-dplyr-to-python-easy">It has made porting dplyr to python easy</h2>
+<p>As I&rsquo;ve worked on <a href="https://github.com/machow/siuba">siuba</a>&mdash;a port of dplyr to python&mdash;I&rsquo;ve had to read code from dplyr&rsquo;s ecosystem of packages, the Tidyverse. Looking through Tidyverse source code, it is clear to me that Tidyverse developers often have to do two things&hellip;</p>
+<ul>
+<li>implement a good chunk of core logic / calculations</li>
+<li>build a nice user interface on top</li>
+</ul>
+<p>While porting dplyr&rsquo;s user interface over, I&rsquo;ve been increasingly surprised that pandas has already done the heavy lifting on the underlying calculations.
+Often, I am just wrapping a couple pandas methods, handling some edge cases, and resetting indexes.</p>
+<p>A good example of this was implementing the <code>spread()</code> function.</p>
+<h3 id="porting-spread-to-siuba">Porting spread to siuba</h3>
+<p>The <code>spread</code> function in dplyr focuses on shaping data from a longer to a wider format, based on a pair columns:</p>
+<ul>
+<li>measure - each entry is the name of a different measurement</li>
+<li>value - each entry is the value for that measurement</li>
+</ul>
+<p>The data is transformed so that each kind of measurement gets its own column.</p>
+<p>For example, the figure below&mdash;taken from <a href="https://r4ds.had.co.nz/tidy-data.html">R for Data Science</a>&mdash;shows the original data on the left, which measures &ldquo;cases&rdquo; and &ldquo;population&rdquo; for different countries over time. Here, the measure column is named <code>key</code>.
+It shows how <code>spread()</code> maps the values to create the data on the right.</p>
+<p><img src="/007-spread.png" alt=""></p>
+<p>In pandas, this can roughly be achieved with the code below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>wide <span style="color:#f92672">=</span> long<span style="color:#f92672">.</span>pivot_table(index <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;Country&#34;</span>, <span style="color:#e6db74">&#34;year&#34;</span>], columns <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;key&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>wide
+</span></span></code></pre></div><pre tabindex="0"><code>                   value            
+key                cases  population
+Country     year                    
+Afghanistan 1999     745    19987071
+            2000    2666    20595360
+Brazil      1999   37737   172006362
+            2000   80488   174504898
+China       1999  212258  1272915272
+            2000  213766  1280428583
+</code></pre><p>This gets us most of the way there, but there are two big downsides with this result:</p>
+<ol>
+<li>it uses MultiIndex objects for both the rows and columns.</li>
+<li>the MultiIndexes have a &ldquo;name&rdquo; attribute set.</li>
+</ol>
+<p>These two things can make the DataFrame difficult to use and reason about, because you have to use different strategies when operating on indexes.
+One of siuba&rsquo;s main job is to reset them, so that as much data as possible is stored as columns.</p>
+<p>As it turns out, this is a little bit complicated.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(wide
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>droplevel(<span style="color:#ae81ff">0</span>, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>reset_index()
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>rename_axis(columns <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> x: <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>    )
+</span></span></code></pre></div><pre tabindex="0"><code>       Country  year   cases  population
+0  Afghanistan  1999     745    19987071
+1  Afghanistan  2000    2666    20595360
+2       Brazil  1999   37737   172006362
+3       Brazil  2000   80488   174504898
+4        China  1999  212258  1272915272
+5        China  2000  213766  1280428583
+</code></pre><p>When doing data analysis, having to do this kind of fine-grained index and name fiddling is probably not what you want. However, as a developer, this kind of granularity is pretty powerful&mdash;and it made implementing <code>spread()</code> a quick task!</p>
+<p>Altogether, the final siuba code to produce the above result is more of a convenience wrapper.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> siuba <span style="color:#f92672">import</span> _, spread
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># spreading from longer to wider format</span>
+</span></span><span style="display:flex;"><span>spread(long, _<span style="color:#f92672">.</span>key, _<span style="color:#f92672">.</span>value)
+</span></span></code></pre></div><p>(Note: siuba uses the unstack method in its spread implementation, rather than pivot_table, but the idea is the same.)</p>
+<h3 id="pandas-flexibility-makes-more-powerful-functions-possible">pandas&rsquo; flexibility makes more powerful functions possible</h3>
+<p>Recently, dplyr released more general versions of spread, and gather&mdash;called <code>pivot_wider</code> and <code>pivot_longer</code>.
+As a testament to pandas flexibility, it looks like all the functionality to port these functions is already there.</p>
+<h2 id="summary">Summary</h2>
+<p>pandas is a useful tool for data analysis in its own right. When you&rsquo;re using it, you might miss some of the difficult jobs it is doing for you, like ensuring reasonable behavior around data types.</p>
+<p>But that&rsquo;s only half the picture.
+It also serves as a foundation for a lot of interesting tools, like&hellip;</p>
+<ul>
+<li><a href="https://github.com/ibis-project/ibis">ibis</a> - dplyr-like analyses on top of pandas DataFrames or SQL databases. Some of the maintainers are also pandas devs.</li>
+<li><a href="https://github.com/has2k1/plotnine">plotnine</a> - a faithful port of ggplot. Built on matplotlib.</li>
+</ul>
+<p>It seems like there&rsquo;s been a lot of frustration surfacing on twitter lately from people coming from R&mdash;especially if they&rsquo;ve used dplyr and ggplot&mdash;towards pandas and matplotlib. I can relate. I&rsquo;m developing a port of dplyr to python. But in the end, it&rsquo;s probably helpful to view these libraries as foundational to a lot of other, higher-level libraries (some of which will hopefully get things right for you!).</p>
+
+    </div>
+    
+  </div>
+  <div class="container-article--toc">
+    <div class="toc-content toc-hide"></div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p>Follow on <a href="https://twitter.com/chowthedog" target="_blank">Twitter</a> | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
+  </div>
+</section>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js" integrity="sha256-+bhVTaRmJ/c07eV80nU8gD2cBBF0rYkf1txqXlrbvb0=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/go.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/dockerfile.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-117743385-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+<script>
+tocbot.init({
+  
+  tocSelector: '.toc-content',
+  
+  contentSelector: '.content-article',
+  
+  headingSelector: 'h1, h2, h3',
+  
+  hasInnerContainers: true,
+  collapseDepth: 3,
+  headingsOffset: 30
+});
+</script>
+</body>
